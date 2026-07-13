@@ -12,3 +12,16 @@ Production-ready Puppet 8 open-source manifests engineered to enforce continuous
 - **Autosign Workflows:** Structured configurations to support Puppet CA policy-based autosigning for secure, frictionless onboarding of newly provisioned on-premises VMware hosts.
 - **Observability Automation:** Installs and dynamically configures Prometheus Node Exporters and Caddy reverse proxies across staging boundaries (**ISIT, QA, UAT, PRD**).
 
+## Repository Component Matrix
+- **manifests/init.pp:** Central configuration initialization layout.
+- **manifests/observability.pp:** Installs and manages telemetry collectors.
+- **scripts/validate_puppet_resources.py:** Validates resource definitions against operational baselines.
+- **.azure-pipelines/puppet-validation-ci.yml:** Verification workflow processing code linter routines.
+
+## Running Resource Allocation Scans
+To validate manifest properties and variable strings locally before submitting code modifications, execute the parsing script below:
+
+```bash
+# Execute parameter verification checks against a target class manifest
+python scripts/validate_puppet_resources.py "manifests/observability.pp"
+```
