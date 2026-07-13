@@ -1,0 +1,74 @@
+# ==============================================================================
+# Pipeline Name: puppet-validation-ci.yml
+# Description: Automated Quality Assurance testing framework for Puppet manifests.
+#              Triggers on code commit events to execute linting and syntax checks.
+# ==============================================================================
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - name: ruby_version
+    value: '3.2'
+
+stages:
+  - stage: StaticAnalysis
+    displayName: 'Syntax & Code Quality Linting'
+    jobs:
+      - job: ExecuteLinters
+        displayName: 'Run Validation Suite'
+        steps:
+          # Initialize stable runtime environment for testing dependencies
+          - task: UseRubyVersion@0
+            inputs:
+              versionSpec: '$(ruby_version)'
+            displayName: 'Bind Ruby Runtime Environments'
+
+          # Install lint tools via RubyGems package infrastructure
+          - script: |
+              gem install puppet-lint
+              gem install metadata-json-lint
+              gem install puppet-syntax
+            displayName: 'Provision Verification Tools'
+
+          # Verify style rules and community guidelines are followed
+          - script: |
+              puppet-lint manifests/ --no-autoloader_layout-check --fail-on-warnings
+            displayName: 'Execute Manifest Layout Linting'
+
+          # Validate metadata structures match Forge delivery design shapes
+          - script: |
+              if [ -f metadata.json ]; then
+                metadata-json-lint metadata.json
+              else
+                echo "[INFO] No metadata.json configuration found. Skipping layout verification."
+              fi
+            displayName: 'Validate Metadata JSON Consistency'
+
+  - stage: CompilationVerification
+    displayName: 'Manifest Dry-Run Validation'
+    dependsOn: StaticAnalysis
+    condition: succeeded()
+    jobs:
+      - job: CompileCheck
+        displayName: 'Execute Syntax Compile Engine'
+        steps:
+          - task: UseRubyVersion@0
+            inputs:
+              versionSpec: '$(ruby_version)'
+
+          # Install baseline platform application binaries
+          - script: |
+              gem install puppet
+            displayName: 'Install Core Application Engines'
+
+          # Dry-run validation parsing to identify trailing loops or compilation breakages
+          - script: |
+              find manifests/ -name "*.pp" -exec puppet parser validate {} +
+            displayName: 'Run Parser Compilation Diagnostics'

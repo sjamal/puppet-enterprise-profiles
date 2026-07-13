@@ -1,0 +1,26 @@
+# ==============================================================================
+# Gitignore Profile: Python, Jenkins, & Puppet Artifacts
+# ==============================================================================
+
+# Python bytecode and caching layers
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Local pipeline execution variables and environment values
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Puppet configuration modules and downloaded dependencies
+/spec/fixtures/modules/
+/pkg/
+/.yardoc
+/_yardoc
+.plugin
+
+# Jenkins workspace run directories
+validation-reports/
