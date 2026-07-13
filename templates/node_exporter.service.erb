@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus Node Exporter Tracking Daemon
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Type=simple
+ExecStart=/opt/node_exporter/node_exporter --collector.ntp --collector.systemd --web.listen-address=":9100"
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
