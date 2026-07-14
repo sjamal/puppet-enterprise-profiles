@@ -1,0 +1,19 @@
+# ==============================================================================
+# Caddyfile Template - Managed programmatically via Puppet infrastructure
+# Target Lifecycle Tier: <%= @target_environment.upper() %>
+# ==============================================================================
+
+apps.institutional.edu {
+    # Route ingress matrix down to the internal WebSphere Liberty application tiers
+    reverse_proxy 10.100.10.25:9080 {
+        header_up Host {upstream_hostport}
+        header_up X-Real-IP {remote_host}
+    }
+    
+    log {
+        output file /var/log/caddy/ingress_access.log {
+            roll_size 10mb
+            roll_keep 5
+        }
+    }
+}
