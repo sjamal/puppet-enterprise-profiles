@@ -27,3 +27,13 @@ To validate manifest properties and variable strings locally before submitting c
 # Execute parameter verification checks against a target class manifest
 python scripts/validate_puppet_resources.py "manifests/observability.pp"
 ```
+
+## Related Enterprise Projects
+
+Part of the integrated enterprise configuration management ecosystem:
+
+- **[puppet-sles-hardening](https://github.com/sjamal/puppet-sles-hardening)** — CIS hardening profiles for SLES
+- **[hybrid-governance-automation](https://github.com/sjamal/hybrid-governance-automation)** — Orchestration and gating
+- **[enterprise-hybrid-pipelines](https://github.com/sjamal/enterprise-hybrid-pipelines)** — Post-provisioning automation
+- **[enterprise-network-mesh](https://github.com/sjamal/enterprise-network-mesh)** — Network configuration
+- **[ansible](https://github.com/sjamal/ansible)** — Complementary provisioning framework
